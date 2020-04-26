@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.59.1" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>pyecharts 之神奇的轴索引&nbsp;&ndash;&nbsp;Articles</title><link rel="stylesheet" href="/css/core.min.dc1e9c56383253a92e952044bbf9695dbb320db4c154afecac64a6fe0ad70f6c4b2f64097cf2d51e23ee15c0dfb0b601.css" integrity="sha384-3B6cVjgyU6kulSBEu/lpXbsyDbTBVK/srGSm/grXD2xLL2QJfPLVHiPuFcDfsLYB"><body>
+    <div class="base-body"><section id="header" class="site header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Articles</span></a></span>
+        <span class="header right-side"><div class="nav wrap"><nav class="nav"><a class="nav item" href="https://github.com/pyecharts"target="_blank">Homeland</a></nav></div></span></div><div class="site slogan"><span class="title">🐶 Life is about waiting for the right moment to act.</span></div></section><div id="content"><div class="article-container"><section class="article header">
+    <h1 class="article title">pyecharts 之神奇的轴索引</h1><i><br/>Author: sunhailin-Leo</i><p class="article date">2020-04-13<span class="reading-time"> • 7 minutes to read</span></p></section><article class="article markdown-body">
+
+<h2 id="题外话">题外话</h2>
+
+<ul>
+<li>这周忙着工作上的事情，拖更了好久。本来这周打算周中发布新篇的，结果拖到周日才有空开始写。</li>
+<li>emm 以后尽量尽量周三、四更新 😄；</li>
+<li>话不多说，进入正题哈 👀</li>
+</ul>
+
+<h2 id="简介">简介</h2>
+
+<ul>
+<li>这周讲一下大家可能会比较疑惑的，比较少用，但在用的时候时候非常必要的部分参数。</li>
+</ul>
+
+<h2 id="轴索引">轴索引</h2>
+
+<ul>
+<li>轴索引这个概念，顾名思义就是给 <code>pyecharts / Echarts</code> 的轴系图（带直角坐标系的图）赋予了索引，能够让数据映射到对应的轴上，从而实现一些高阶的直角坐标系的图。</li>
+<li>在各位开发者使用 <code>pyecharts</code> 中经常会使用到 <code>Overlap</code>，<code>Grid</code> 之类的布局组件，或者在画一些多 <code>X / Y</code> 轴的图的时候会使用到。</li>
+</ul>
+
+<h2 id="进入正题">进入正题</h2>
+
+<ul>
+<li>下面通过几个 Demo 的讲解，让各位读者更深入的去理解轴索引的使用。</li>
+</ul>
+
+<h2 id="demo-1-多-y-轴的索引">Demo 1（多 Y 轴的索引）</h2>
+
+<ul>
+<li>Demo 1 的地址：<a href="http://gallery.pyecharts.org/#/Bar/multiple_y_axes">多 Y 轴的示例</a></li>
+<li>Demo 1 的代码：
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> pyecharts.options <span style="color:#f92672">as</span> opts
+<span style="color:#f92672">from</span> pyecharts.charts <span style="color:#f92672">import</span> Bar, Line
+
+colors <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;#5793f3&#34;</span>, <span style="color:#e6db74">&#34;#d14a61&#34;</span>, <span style="color:#e6db74">&#34;#675bba&#34;</span>]
+x_data <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;1月&#34;</span>, <span style="color:#e6db74">&#34;2月&#34;</span>, <span style="color:#e6db74">&#34;3月&#34;</span>, <span style="color:#e6db74">&#34;4月&#34;</span>, <span style="color:#e6db74">&#34;5月&#34;</span>, <span style="color:#e6db74">&#34;6月&#34;</span>, <span style="color:#e6db74">&#34;7月&#34;</span>, <span style="color:#e6db74">&#34;8月&#34;</span>, <span style="color:#e6db74">&#34;9月&#34;</span>, <span style="color:#e6db74">&#34;10月&#34;</span>, <span style="color:#e6db74">&#34;11月&#34;</span>, <span style="color:#e6db74">&#34;12月&#34;</span>]
+legend_list <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;蒸发量&#34;</span>, <span style="color:#e6db74">&#34;降水量&#34;</span>, <span style="color:#e6db74">&#34;平均温度&#34;</span>]
+evaporation_capacity <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">4.9</span>, <span style="color:#ae81ff">7.0</span>, <span style="color:#ae81ff">23.2</span>, <span style="color:#ae81ff">25.6</span>, <span style="color:#ae81ff">76.7</span>, <span style="color:#ae81ff">135.6</span>, <span style="color:#ae81ff">162.2</span>, <span style="color:#ae81ff">32.6</span>,  <span style="color:#ae81ff">20.0</span>, <span style="color:#ae81ff">6.4</span>, <span style="color:#ae81ff">3.3</span>,
+]
+rainfall_capacity <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">2.6</span>, <span style="color:#ae81ff">5.9</span>, <span style="color:#ae81ff">9.0</span>, <span style="color:#ae81ff">26.4</span>, <span style="color:#ae81ff">28.7</span>, <span style="color:#ae81ff">70.7</span>, <span style="color:#ae81ff">175.6</span>, <span style="color:#ae81ff">182.2</span>, <span style="color:#ae81ff">48.7</span>, <span style="color:#ae81ff">18.8</span>, <span style="color:#ae81ff">6.0</span>, <span style="color:#ae81ff">2.3</span>,
+]
+average_temperature <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">2.2</span>, <span style="color:#ae81ff">3.3</span>, <span style="color:#ae81ff">4.5</span>, <span style="color:#ae81ff">6.3</span>, <span style="color:#ae81ff">10.2</span>, <span style="color:#ae81ff">20.3</span>, <span style="color:#ae81ff">23.4</span>, <span style="color:#ae81ff">23.0</span>, <span style="color:#ae81ff">16.5</span>, <span style="color:#ae81ff">12.0</span>, <span style="color:#ae81ff">6.2</span>,
+]
+
+bar <span style="color:#f92672">=</span> (
+    Bar(init_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>InitOpts(width<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1680px&#34;</span>, height<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;800px&#34;</span>))
+    <span style="color:#f92672">.</span>add_xaxis(xaxis_data<span style="color:#f92672">=</span>x_data)
+    <span style="color:#f92672">.</span>add_yaxis(
+        series_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;蒸发量&#34;</span>,
+        yaxis_data<span style="color:#f92672">=</span>evaporation_capacity,
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+        color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">1</span>],
+    )
+    <span style="color:#f92672">.</span>add_yaxis(
+        series_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;降水量&#34;</span>, 
+        yaxis_data<span style="color:#f92672">=</span>rainfall_capacity, 
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, 
+        color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">0</span>],
+    )
+    <span style="color:#f92672">.</span>extend_axis(
+        yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;蒸发量&#34;</span>,
+            type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>,
+            min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+            max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">1</span>])
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+        )
+    )
+    <span style="color:#f92672">.</span>extend_axis(
+        yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>,
+            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;温度&#34;</span>,
+            min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+            max_<span style="color:#f92672">=</span><span style="color:#ae81ff">25</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;left&#34;</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">2</span>])
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} °C&#34;</span>),
+            splitline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>SplitLineOpts(
+                is_show<span style="color:#f92672">=</span>True, linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(opacity<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+            ),
+        )
+    )
+    <span style="color:#f92672">.</span>set_global_opts(
+        yaxis_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>,
+            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;降水量&#34;</span>,
+            min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+            max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>,
+            offset<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">0</span>])
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+        ),
+        tooltip_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>TooltipOpts(trigger<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;axis&#34;</span>, axis_pointer_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cross&#34;</span>),
+    )
+)
+
+line <span style="color:#f92672">=</span> (
+    Line()
+    <span style="color:#f92672">.</span>add_xaxis(xaxis_data<span style="color:#f92672">=</span>x_data)
+    <span style="color:#f92672">.</span>add_yaxis(
+        series_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;平均温度&#34;</span>, 
+        y_axis<span style="color:#f92672">=</span>average_temperature, 
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, 
+        color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">2</span>]<span style="color:#960050;background-color:#1e0010">，</span>
+    )
+)
+
+bar<span style="color:#f92672">.</span>overlap(line)<span style="color:#f92672">.</span>render(<span style="color:#e6db74">&#34;multiple_y_axes.html&#34;</span>)</code></pre></div>
+<figure>
+<img src="https://pic1.zhimg.com/80/v2-acb5eb39323ef4a94584a146158100e4_1440w.jpg" width="800"/>
+<figcaption><center>图1</center></figcaption>
+</figure></li>
+</ul>
+
+<h2 id="demo-1-多-y-轴索引-的图例剖析">Demo 1 （多 Y 轴索引）的图例剖析</h2>
+
+<ul>
+<li>1、在 <code>pyecharts</code> 中，想要画出这样的图得使用 <code>Overlap</code> 组件，其次这图仅用两个基础类型的图 <code>Bar（柱状图）</code>，和 <code>Line （折线图）</code>。</li>
+<li>2、柱状图的两个数据维度，蒸发量，降水量；单位都是 ml （毫升）；因此在观测上为了好看，可以将这两组维度的轴放在同侧进行观测。</li>
+<li>3、折线图目前只有一个维度：平均温度；单位是摄氏度；为了区别于柱状图的轴，因此可以放在柱状图轴的另一侧进行观测。</li>
+</ul>
+
+<h2 id="demo-1-多-y-轴索引-的代码剖析">Demo 1 （多 Y 轴索引）的代码剖析</h2>
+
+<ul>
+<li><strong>1、需要注意的是所有的轴索引的初始值都是 0。多轴的情况下，按照添加顺序进行排序。</strong></li>
+<li>2、在上面图例剖析以及上面这点注意事项后可以得出一个画图的公式：<code>Bar + Line = Bar-Y-0 + Bar-Y-1 + Line-Y-2</code></li>
+<li>Bar 图的代码中对轴的操作主要是 <code>add_yaxis</code>, <code>extend_axis</code> 以及 <code>set_global_opts</code> 中的 <code>AxisOpts</code> 配置。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">.</span>add_yaxis(
+    series_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;蒸发量&#34;</span>,
+    yaxis_data<span style="color:#f92672">=</span>evaporation_capacity,
+    yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+    color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">1</span>],
+)</code></pre></div></li>
+<li>上面这行代码是添加第一个轴（蒸发量）的，因此它的轴索引是 0（默认值也是 0，因此在这段代码里面 <code>yaxis_index = 0</code> 可写可不写）
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">.</span>add_yaxis(
+    series_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;降水量&#34;</span>, 
+    yaxis_data<span style="color:#f92672">=</span>rainfall_capacity, 
+    yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, 
+    color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">0</span>],
+)</code></pre></div></li>
+<li>降水量的轴是第二个轴，因此轴索引值为 1 。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">.</span>extend_axis(
+   yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+       name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;蒸发量&#34;</span>, type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+       position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>,
+       axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+           linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">1</span>])
+       ),
+       axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+  )
+)</code></pre></div></li>
+<li>上面这段代码的作用是用来更加细致的配置第一个轴（蒸发量），其中 <code>position</code> 是用来配置轴的相对位置。 <code>axisline_opts</code> 是为了修改轴线的配置，<code>axislabel_opts</code> 则是用来修改轴上标签的配置。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">.</span>extend_axis(
+    yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+        type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;温度&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">25</span>,
+        position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;left&#34;</span>,
+        axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+            linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">2</span>])
+        ),
+        axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} °C&#34;</span>),
+        splitline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>SplitLineOpts(
+            is_show<span style="color:#f92672">=</span>True, linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(opacity<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+        ),
+    )
+)</code></pre></div></li>
+<li>上面这段代码是用来提前配置 <code>Line</code> 图中的 Y 轴，作用和上面配置蒸发量的轴的配置是几乎一样的，这里不涉及轴索引的配置，仅配置轴的样式。<code>splitline_opts</code> 的作用在于设置样例图中从左侧 Y 轴引出的刻度线。</li>
+</ul>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">.</span>set_global_opts(
+    yaxis_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+        type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;降水量&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+        position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>, offset<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span>,
+        axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+            linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">0</span>])
+        ),
+        axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+    ),
+    tooltip_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>TooltipOpts(trigger<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;axis&#34;</span>, axis_pointer_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cross&#34;</span>),
+)</code></pre></div>
+* 上面这段中的 <code>yaxis_opts</code> 就是用来配置降水量的轴，通过设置 <code>position</code> 与蒸发量同侧，设置 <code>offset</code> 让两个轴有间隔不会重叠。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">line <span style="color:#f92672">=</span> (
+    Line()
+    <span style="color:#f92672">.</span>add_xaxis(xaxis_data<span style="color:#f92672">=</span>x_data)
+    <span style="color:#f92672">.</span>add_yaxis(
+        series_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;平均温度&#34;</span>, y_axis<span style="color:#f92672">=</span>average_temperature, 
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, 
+        color<span style="color:#f92672">=</span>colors[<span style="color:#ae81ff">2</span>]<span style="color:#960050;background-color:#1e0010">，</span>
+    )
+)</code></pre></div>
+* 上面这段代码是 <code>Line</code> 图的配置。根据我们上面提到的公式，因此 <code>Line</code> 图对应的 Y 轴索引为 2，所以在 <code>add_yaxis</code> 的 <code>yaxis_index</code> 值即为 2 。</p>
+
+<h2 id="demo-1-多-y-轴索引-总结">Demo 1 （多 Y 轴索引）总结</h2>
+
+<ul>
+<li>通过上面的代码段和代码说明，相信读到这里的同学应该已经对轴索引这个概念有个粗略的认识了。</li>
+<li>讲完多 Y 轴之后，各位同学相信对多 X 轴的非常感兴趣。</li>
+<li>其实多 Y 轴和多 X 轴的道理是相通的，这里给出 pyecharts-gallery 中的多 X 轴的示例给大家，大家按照上面的分析逻辑去分析多 X 轴的代码即可，相信大家能够理解多 X / Y 轴的图的特点，以及轴索引这个概念。</li>
+</ul>
+
+<p><center><a href="http://gallery.pyecharts.org/#/Line/multiple_x_axes">多 X 轴的示例</a></center></p>
+
+<hr />
+
+<h2 id="demo-2-grid-overlap-复杂多轴示例-高阶用法">Demo 2 （Grid + Overlap + 复杂多轴示例）&ndash; 高阶用法</h2>
+
+<ul>
+<li>建议将 Demo 1 吃透之后再看，否则会越看越晕的。（在画图的时候脑子里最好有图，否则经常会画不出来的 🐶）</li>
+<li>Demo 2 讲解的起点：<strong>默认各位已经将 Demo 1 吃透，并理解了轴索引的概念。</strong></li>
+<li>Demo 2 的地址：<a href="http://gallery.pyecharts.org/#/Grid/grid_overlap_multi_xy_axis">Grid + Overlap + 多 X / Y 轴示例</a></li>
+<li>Demo 2 的代码：(代码有点长，建议用电脑访问~)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pyecharts <span style="color:#f92672">import</span> options <span style="color:#66d9ef">as</span> opts
+<span style="color:#f92672">from</span> pyecharts.charts <span style="color:#f92672">import</span> Bar, Grid, Line
+
+bar <span style="color:#f92672">=</span> (
+    Bar()
+    <span style="color:#f92672">.</span>add_xaxis([<span style="color:#e6db74">&#34;{}月&#34;</span><span style="color:#f92672">.</span>format(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">13</span>)])
+    <span style="color:#f92672">.</span>add_yaxis(
+        <span style="color:#e6db74">&#34;蒸发量&#34;</span>, [<span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">4.9</span>, <span style="color:#ae81ff">7.0</span>, <span style="color:#ae81ff">23.2</span>, <span style="color:#ae81ff">25.6</span>, <span style="color:#ae81ff">76.7</span>, <span style="color:#ae81ff">135.6</span>, <span style="color:#ae81ff">162.2</span>, <span style="color:#ae81ff">32.6</span>, <span style="color:#ae81ff">20.0</span>, <span style="color:#ae81ff">6.4</span>, <span style="color:#ae81ff">3.3</span>],
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+        color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#d14a61&#34;</span>,
+    )
+    <span style="color:#f92672">.</span>add_yaxis(
+        <span style="color:#e6db74">&#34;降水量&#34;</span>, [<span style="color:#ae81ff">2.6</span>, <span style="color:#ae81ff">5.9</span>, <span style="color:#ae81ff">9.0</span>, <span style="color:#ae81ff">26.4</span>, <span style="color:#ae81ff">28.7</span>, <span style="color:#ae81ff">70.7</span>, <span style="color:#ae81ff">175.6</span>, <span style="color:#ae81ff">182.2</span>, <span style="color:#ae81ff">48.7</span>, <span style="color:#ae81ff">18.8</span>, <span style="color:#ae81ff">6.0</span>, <span style="color:#ae81ff">2.3</span>],
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+        color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#5793f3&#34;</span>,
+    )
+    <span style="color:#f92672">.</span>extend_axis(
+        yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;蒸发量&#34;</span>, type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#d14a61&#34;</span>)
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+        )
+    )
+    <span style="color:#f92672">.</span>extend_axis(
+        yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;温度&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">25</span>,
+             osition<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;left&#34;</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#675bba&#34;</span>)
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} °C&#34;</span>),
+            splitline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>SplitLineOpts(
+                is_show<span style="color:#f92672">=</span>True, linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(opacity<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+            ),
+        )
+    )
+    <span style="color:#f92672">.</span>set_global_opts(
+        yaxis_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;降水量&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>,
+            offset<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#5793f3&#34;</span>)
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+        ),
+        title_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>TitleOpts(title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Grid-Overlap-多 X/Y 轴示例&#34;</span>),
+        tooltip_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>TooltipOpts(trigger<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;axis&#34;</span>, axis_pointer_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cross&#34;</span>),
+        legend_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LegendOpts(pos_left<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;25%&#34;</span>),
+    )
+)
+
+line <span style="color:#f92672">=</span> (
+    Line()
+    <span style="color:#f92672">.</span>add_xaxis([<span style="color:#e6db74">&#34;{}月&#34;</span><span style="color:#f92672">.</span>format(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">13</span>)])
+    <span style="color:#f92672">.</span>add_yaxis(
+        <span style="color:#e6db74">&#34;平均温度&#34;</span>, [<span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">2.2</span>, <span style="color:#ae81ff">3.3</span>, <span style="color:#ae81ff">4.5</span>, <span style="color:#ae81ff">6.3</span>, <span style="color:#ae81ff">10.2</span>, <span style="color:#ae81ff">20.3</span>, <span style="color:#ae81ff">23.4</span>, <span style="color:#ae81ff">23.0</span>, <span style="color:#ae81ff">16.5</span>, <span style="color:#ae81ff">12.0</span>, <span style="color:#ae81ff">6.2</span>],
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>,
+        color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#675bba&#34;</span>,
+        label_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(is_show<span style="color:#f92672">=</span>False),
+    )
+)
+
+bar1 <span style="color:#f92672">=</span> (
+    Bar()
+    <span style="color:#f92672">.</span>add_xaxis([<span style="color:#e6db74">&#34;{}月&#34;</span><span style="color:#f92672">.</span>format(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">13</span>)])
+    <span style="color:#f92672">.</span>add_yaxis(
+        <span style="color:#e6db74">&#34;蒸发量 1&#34;</span>, [<span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">4.9</span>, <span style="color:#ae81ff">7.0</span>, <span style="color:#ae81ff">23.2</span>, <span style="color:#ae81ff">25.6</span>, <span style="color:#ae81ff">76.7</span>, <span style="color:#ae81ff">135.6</span>, <span style="color:#ae81ff">162.2</span>, <span style="color:#ae81ff">32.6</span>, <span style="color:#ae81ff">20.0</span>, <span style="color:#ae81ff">6.4</span>, <span style="color:#ae81ff">3.3</span>],
+        color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#d14a61&#34;</span>,
+        xaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>,
+    )
+    <span style="color:#f92672">.</span>add_yaxis(
+        <span style="color:#e6db74">&#34;降水量 2&#34;</span>, [<span style="color:#ae81ff">2.6</span>, <span style="color:#ae81ff">5.9</span>, <span style="color:#ae81ff">9.0</span>, <span style="color:#ae81ff">26.4</span>, <span style="color:#ae81ff">28.7</span>, <span style="color:#ae81ff">70.7</span>, <span style="color:#ae81ff">175.6</span>, <span style="color:#ae81ff">182.2</span>, <span style="color:#ae81ff">48.7</span>, <span style="color:#ae81ff">18.8</span>, <span style="color:#ae81ff">6.0</span>, <span style="color:#ae81ff">2.3</span>],
+        color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#5793f3&#34;</span>,
+        xaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>,
+    )
+    <span style="color:#f92672">.</span>extend_axis(
+        yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;蒸发量&#34;</span>, type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#d14a61&#34;</span>)
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+        )
+    )
+    <span style="color:#f92672">.</span>extend_axis(
+        yaxis<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            type_<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;value&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;温度&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">25</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;left&#34;</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#675bba&#34;</span>)
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} °C&#34;</span>),
+            splitline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>SplitLineOpts(
+                is_show<span style="color:#f92672">=</span>True, linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(opacity<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+            ),
+        )
+    )
+    <span style="color:#f92672">.</span>set_global_opts(
+        xaxis_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(grid_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>),
+        yaxis_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisOpts(
+            name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;降水量&#34;</span>, min_<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, max_<span style="color:#f92672">=</span><span style="color:#ae81ff">250</span>,
+            position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;right&#34;</span>,
+            offset<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span>,
+            grid_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+            axisline_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>AxisLineOpts(
+                linestyle_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LineStyleOpts(color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#5793f3&#34;</span>)
+            ),
+            axislabel_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(formatter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{value} ml&#34;</span>),
+        ),
+        tooltip_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>TooltipOpts(trigger<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;axis&#34;</span>, axis_pointer_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cross&#34;</span>),
+        legend_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LegendOpts(pos_left<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;65%&#34;</span>),
+    )
+)
+
+line1 <span style="color:#f92672">=</span> (
+    Line()
+    <span style="color:#f92672">.</span>add_xaxis([<span style="color:#e6db74">&#34;{}月&#34;</span><span style="color:#f92672">.</span>format(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">13</span>)])
+    <span style="color:#f92672">.</span>add_yaxis(
+        <span style="color:#e6db74">&#34;平均温度 1&#34;</span>, [<span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">2.2</span>, <span style="color:#ae81ff">3.3</span>, <span style="color:#ae81ff">4.5</span>, <span style="color:#ae81ff">6.3</span>, <span style="color:#ae81ff">10.2</span>, <span style="color:#ae81ff">20.3</span>, <span style="color:#ae81ff">23.4</span>, <span style="color:#ae81ff">23.0</span>, <span style="color:#ae81ff">16.5</span>, <span style="color:#ae81ff">12.0</span>, <span style="color:#ae81ff">6.2</span>],
+        color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#675bba&#34;</span>,
+        label_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>LabelOpts(is_show<span style="color:#f92672">=</span>False),
+        xaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+        yaxis_index<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>,
+    )
+)
+
+overlap_1 <span style="color:#f92672">=</span> bar<span style="color:#f92672">.</span>overlap(line)
+overlap_2 <span style="color:#f92672">=</span> bar1<span style="color:#f92672">.</span>overlap(line1)
+
+grid <span style="color:#f92672">=</span> (
+    Grid(init_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>InitOpts(width<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1200px&#34;</span>, height<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;800px&#34;</span>))
+    <span style="color:#f92672">.</span>add(
+        overlap_1, grid_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>GridOpts(pos_right<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;58%&#34;</span>), 
+        is_control_axis_index<span style="color:#f92672">=</span>True
+    )
+    <span style="color:#f92672">.</span>add(
+        overlap_2, grid_opts<span style="color:#f92672">=</span>opts<span style="color:#f92672">.</span>GridOpts(pos_left<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;58%&#34;</span>), 
+        is_control_axis_index<span style="color:#f92672">=</span>True)
+    <span style="color:#f92672">.</span>render(<span style="color:#e6db74">&#34;grid_overlap_multi_xy_axis.html&#34;</span>)
+)</code></pre></div></li>
+</ul>
+
+<figure>
+    <img src="https://pic4.zhimg.com/80/v2-95b295a6c226e5c656b1d330ba02fb77_1440w.jpg" width="800"/>
+  <figcaption><center>图2</center></figcaption>
+</figure>
+
+<h2 id="demo-2-grid-overlap-复杂多轴示例-的图例剖析">Demo 2 （Grid + Overlap + 复杂多轴示例）的图例剖析：</h2>
+
+<ul>
+<li>眼尖的同学应该看的出这个图实际上和 Demo 1 的是一样的，仅仅是使用了 <code>Grid</code> 进行了水平布局而已。</li>
+<li>虽然说起来简单，但是，这里面的轴索引与 Demo 1 就有了变化；出现了 <code>xaxis_index</code></li>
+</ul>
+
+<h2 id="demo-2-grid-overlap-复杂多轴示例-的代码剖析">Demo 2 （Grid + Overlap + 复杂多轴示例）的代码剖析：</h2>
+
+<ul>
+<li>1、在 Demo 1 中我们得出一个画图公式：
+<code>Bar + Line = Bar-Y-0 + Bar-Y-1 + Line-Y-2</code>，在 Demo 2 中，由于我们会出现多个 X 轴，因此我们需要对 X 轴的进行合并。</li>
+<li>2、根据 Demo 1 的公式，在 Demo 2 中可以推出：
+<code>(Bar0 + Line0) + (Bar1 + Line1) = (X0 + Bar-Y-0 + Bar-Y-1 + Line-Y-2) + (X1 + Bar-Y-3 + Bar-Y-4 + Line-Y-5)</code></li>
+<li>3、因此我们得出 X 轴的轴索引范围是 [0, 1]，Y 轴的轴索引范围是 [0, 5]。</li>
+<li>4、根据我们新推出的公式和取值范围后，我们就很容易写出两部分代码了 <code>Ovelap0 = Bar0 + Line0</code> 和 <code>Overlap1 = Bar1 + Line1</code></li>
+<li>5、现在我们来针对多轴情况下对 <code>Grid</code> 的特别处理进行说明 ：
+
+<ul>
+<li>5.1、一般情况 <code>Overlap</code> 的图，我们都会自己设置轴索引，因此我们需要在 <code>Grid</code> 组件 <code>add</code> 图的时候配置 <code>is_control_axis_index</code> 的值为 <code>True</code>；这个配置的作用在于让我们之前设置的轴索引配置生效，否则会让 <code>pyecharts</code> 中的默认规则进行渲染。</li>
+<li>5.2、默认规则的代码段如下：
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> is_control_axis_index:
+    <span style="color:#66d9ef">for</span> s <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>options<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;series&#34;</span>):
+        s<span style="color:#f92672">.</span>update(xAxisIndex<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_axis_index, yAxisIndex<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>_axis_index)</code></pre></div></li>
+</ul></li>
+</ul>
+
+<h2 id="demo-2-grid-overlap-复杂多轴示例-的总结">Demo 2 （Grid + Overlap + 复杂多轴示例）的总结：</h2>
+
+<ul>
+<li>当理解了 Demo 1 多 Y 轴的使用之后，实际上 Demo 2 中仅仅加入了多 X 轴的配置（类似多 Y 轴的方式）以及 <code>Grid</code> 参数即可。
+最重要的是理清楚轴索引的位置即可，因此各位同学可以在写代码画图之前，先画草图，规划好轴的索引，再开始从小图开始画起，最后在修改对应的轴索引。</li>
+</ul>
+
+<h2 id="总结">总结：</h2>
+
+<ul>
+<li>在 Demo 1，2 的剖析中都提到了公式，按照所给出的公式推理方式，可以让各位同学画图的时候更加容易在脑海里形成图形的框架。</li>
+<li>轴索引的概念其实并不难，最重要的是细心 😊，慢工出细活 🔨</li>
+</ul>
+</article></div><section class="article navigation"><p><a class="link" href="/post/pyecharts-jscode/"><span class="li">&larr;</span>pyecharts 之 JsCode 的妙用</a></p><p><a class="link" href="/post/pyecharts-add-js-funcs/"><span class="li">&rarr;</span>pyecharts 彩蛋函数 -- add_js_funcs</a></p></section></div><section id="footer" class="footer"><div class="footer-wrap">
+    <p class="copyright">©2020 pyecharts-team</p>
+    <p class="powerby"><span>Powered by </span><a href="https://gohugo.io" 
+        target="_blank">Hugo</a><span> and the </span><a href="https://themes.gohugo.io/hugo-notepadium/" 
+        target="_blank">Notepadium</a></p>
+</div></section><script src="/js/hljs.min.0799348a91dce12c6be4a73f943cfe78f181f4e6f6ec35c4af0fca1de377879f77cfab03c30f03a174d675737b5a9314.js" integrity="sha384-B5k0ipHc4Sxr5Kc/lDz&#43;ePGB9Ob27DXErw/KHeN3h593z6sDww8DoXTWdXN7WpMU"></script><script>hljs.initHighlightingOnLoad();</script></div>
+</body>
+
+</html>

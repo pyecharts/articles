@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Articles</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on Articles</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>©2020 pyecharts-team</copyright>
+    <lastBuildDate>Mon, 20 Apr 2020 01:00:00 +0800</lastBuildDate>
+    
+        <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>pyecharts 之 JsCode 的妙用</title>
+      <link>/post/pyecharts-jscode/</link>
+      <pubDate>Mon, 20 Apr 2020 01:00:00 +0800</pubDate>
+      
+      <guid>/post/pyecharts-jscode/</guid>
+      <description>题外话 这周又双叒拖更了 Emm, 接下来到 4 月底的时间会变得异常地紧凑，因此各种 issue，和群聊的问题只能见缝插针的回复了； 新版本的 pyecharts 又得等一段时间</description>
+      
+    </item>
+    
+    <item>
+      <title>pyecharts 之神奇的轴索引</title>
+      <link>/post/pyecharts-magical-index/</link>
+      <pubDate>Mon, 13 Apr 2020 18:58:05 +0800</pubDate>
+      
+      <guid>/post/pyecharts-magical-index/</guid>
+      <description>题外话 这周忙着工作上的事情，拖更了好久。本来这周打算周中发布新篇的，结果拖到周日才有空开始写。 emm 以后尽量尽量周三、四更新 😄； 话不多说，进入正</description>
+      
+    </item>
+    
+    <item>
+      <title>pyecharts 彩蛋函数 -- add_js_funcs</title>
+      <link>/post/pyecharts-add-js-funcs/</link>
+      <pubDate>Mon, 13 Apr 2020 12:58:05 +0800</pubDate>
+      
+      <guid>/post/pyecharts-add-js-funcs/</guid>
+      <description>简介 这次主要讲一个内置的函数 &amp;ndash; add_js_funcs 这个函数的作用顾名思义就是添加一个自定义的 javascript 函数 Demo 下面通过一个简单的例子给大家展示一下 话不多说直接上 Demo Cod</description>
+      
+    </item>
+    
+  </channel>
+</rss>
